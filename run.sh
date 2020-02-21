@@ -14,8 +14,13 @@
 
 
 TRAINING_DATASET=gs://workshop-datasets/covertype/training/dataset.csv
-MAX_ITER='[100,150,200]'
-ALPHA='[0.01,0.05,0.1]'
-NUM_JOBS=4
+SCORING_MEASURE=accuracy
+NUM_JOBS=2
+SEARCH_SPACE="[\
+{'classifier':'sklearn.linear_model.SGDClassifier',\
+'classifier__alpha':[0.1,0.2,0.3],\
+'classifier__max_iter':[100,150,200]}\
+]"
 
-python hypertune.py $TRAINING_DATASET $ALPHA $MAX_ITER $NUM_JOBS
+
+python hypertune.py $TRAINING_DATASET $SEARCH_SPACE $SCORING_MEASURE $NUM_JOBS

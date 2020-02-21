@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import importlib
 import logging
 import os
 import subprocess
@@ -22,6 +23,7 @@ import fire
 import pickle
 import numpy as np
 import pandas as pd
+import sklearn
 
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import SGDClassifier
@@ -36,8 +38,9 @@ NUMERIC_FEATURE_INDEXES = slice(0, 10)
 CATEGORICAL_FEATURE_INDEXES = slice(10, 12)
 
   
-def train_evaluate(training_dataset_path, alpha, max_iter, num_jobs):
-    
+def train_evaluate(training_dataset_path, search_space, scoring_measure, num_jobs):
+  """Performs model selection and hyperparameter tuning""" 
+
   # Load training data and convert all numeric features to float
   logging.info("Loading data from: {}".format(training_dataset_path))
   df_train = pd.read_csv(training_dataset_path)
@@ -54,24 +57,27 @@ def train_evaluate(training_dataset_path, alpha, max_iter, num_jobs):
 
   pipeline = Pipeline([
     ('preprocessor', preprocessor),
-    ('classifier', SGDClassifier(loss='log'))
+    ('classifier', SGDClassifier())
   ])
-    
-  param_grid = {
-    'classifier__alpha': alpha,
-    'classifier__max_iter': max_iter
-  }
   
   # Configure hyperparameter tuning
+  
+  # In the parameter grid (search_space) replace 
+  # the names of classifiers with class instances
+  for classifier in search_space:
+    module_name, class_name = classifier["classifier"].rsplit(".", 1)
+    ClassifierClass = getattr(importlib.import_module(module_name), class_name)
+    classifier["classifier"] = [ClassifierClass()]
+    
   grid = GridSearchCV(pipeline, cv=5, n_jobs=num_jobs, 
-                      param_grid=param_grid, 
-                      scoring='accuracy')
+                      param_grid=search_space, 
+                      scoring=scoring_measure)
   
   # Start training
   X_train = df_train.drop('Cover_Type', axis=1)
   y_train = df_train['Cover_Type']
   
-  logging.info("Starting training: {}".format(param_grid))
+  logging.info("Starting training")
   t0= time.time()
   grid.fit(X_train, y_train)
   t1 = time.time()
