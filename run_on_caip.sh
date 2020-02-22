@@ -25,7 +25,7 @@ SEARCH_SPACE="[\
 ]"
 
 
-IMAGE_URI=gcr.io/mlops-workshop/dask_ml_traininer
+IMAGE_URI=gcr.io/mlops-workshop/dask_ml_trainer
 JOB_NAME=JOB_$(date +"%Y%m%d%s")
 JOB_DIR=gs://mlops-workshop-artifact-store/jobs/$JOB_NAME
 CPU_NUMBER=4
