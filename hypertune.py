@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import importlib
+import joblib
 import logging
 import os
 import subprocess
@@ -23,30 +24,30 @@ import fire
 import pickle
 import numpy as np
 import pandas as pd
-import sklearn
 
-from sklearn.compose import ColumnTransformer
+from dask.distributed import Client, LocalCluster
+from dask_ml.model_selection import GridSearchCV
+
 from sklearn.linear_model import SGDClassifier
-from sklearn.model_selection import GridSearchCV
+#from sklearn.model_selection import GridSearchCV
+from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
  
-
-
-
 NUMERIC_FEATURE_INDEXES = slice(0, 10)
 CATEGORICAL_FEATURE_INDEXES = slice(10, 12)
 
   
-def train_evaluate(training_dataset_path, search_space, scoring_measure, num_jobs):
-  """Performs model selection and hyperparameter tuning""" 
+def train_evaluate(training_dataset_path, search_space, scoring_measure):
+  """Runs the training pipeline.""" 
 
-  # Load training data and convert all numeric features to float
-  logging.info("Loading data from: {}".format(training_dataset_path))
+  # Load and prepare training data  
   df_train = pd.read_csv(training_dataset_path)
   num_features_type_map = (
     {feature: 'float64' for feature in df_train.columns[NUMERIC_FEATURE_INDEXES]})
   df_train = df_train.astype(num_features_type_map)
+  X_train = df_train.drop('Cover_Type', axis=1)
+  y_train = df_train['Cover_Type']
 
   # Define the training pipeline
   preprocessor = ColumnTransformer(
@@ -61,40 +62,39 @@ def train_evaluate(training_dataset_path, search_space, scoring_measure, num_job
   ])
   
   # Configure hyperparameter tuning
+  grid = GridSearchCV(pipeline, cv=5,  
+                      param_grid=search_space, 
+                      scoring=scoring_measure)
   
-  # In the parameter grid (search_space) replace 
-  # the names of classifiers with class instances
+  # Start training
+  grid.fit(X_train, y_train)
+    
+  return grid
+    
+def run_dask_job(training_dataset_path, search_space, scoring_measure, n_workers=None, threads_per_worker=None):
+  """Runs a parallel training job."""
+  
+  # Configure parameter grid
   for classifier in search_space:
     module_name, class_name = classifier["classifier"].rsplit(".", 1)
     ClassifierClass = getattr(importlib.import_module(module_name), class_name)
     classifier["classifier"] = [ClassifierClass()]
     
-  grid = GridSearchCV(pipeline, cv=5, n_jobs=num_jobs, 
-                      param_grid=search_space, 
-                      scoring=scoring_measure)
-  
-  # Start training
-  X_train = df_train.drop('Cover_Type', axis=1)
-  y_train = df_train['Cover_Type']
-  
-  logging.info("Starting training")
-  t0= time.time()
-  grid.fit(X_train, y_train)
-  t1 = time.time()
-  logging.info("Time elapsed: {}".format(t1 - t0)) 
-  
-  logging.info("Best estimator: {}".format(grid.best_params_))
-  logging.info("Best score: {}".format(grid.best_score_))
-  
-  # Save the model
-  #if not hptune:
-  #  model_filename = 'model.pkl'
-  #  with open(model_filename, 'wb') as model_file:
-  #      pickle.dump(pipeline, model_file)
-  #  gcs_model_path = "{}/{}".format(job_dir, model_filename)
-  #  subprocess.check_call(['gsutil', 'cp', model_filename, gcs_model_path], stderr=sys.stdout)
-  #  print("Saved model in: {}".format(gcs_model_path)) 
+  # Set up a local Dask cluster
+  cluster = LocalCluster(n_workers=n_workers, processes=True, threads_per_worker=threads_per_worker)
+  client = Client(cluster)
+  logging.info("Cluster: {}".format(cluster))
     
+  logging.info("Starting training ...")
+  t0= time.time()
+  result = train_evaluate(training_dataset_path, search_space, scoring_measure)
+  t1 = time.time()
+  logging.info("Elapsed time: {}".format(t1-t0))
+  logging.info("Best accuracy: {}".format(result.best_score_))
+  logging.info("Best estimater: {}".format(result.best_estimator_))
+  logging.info("Best parameters: {}".format(result.best_params_))
+
+  
 if __name__ == "__main__":
   logging.basicConfig(level=logging.INFO)
-  fire.Fire(train_evaluate)
+  fire.Fire(run_dask_job)

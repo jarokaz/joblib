@@ -13,14 +13,33 @@
 # limitations under the License.
 
 
-TRAINING_DATASET=gs://workshop-datasets/covertype/training/dataset.csv
+TRAINING_DATASET=gs://workshop-datasets/covertype/evaluation/dataset.csv
 SCORING_MEASURE=accuracy
-NUM_JOBS=2
 SEARCH_SPACE="[\
 {'classifier':'sklearn.linear_model.SGDClassifier',\
-'classifier__alpha':[0.1,0.2,0.3],\
-'classifier__max_iter':[100,150,200]}\
+'classifier__alpha':[0.0002,0.0004,0.0008,0.001],\
+'classifier__max_iter':[500,1000]},\
+{'classifier':'sklearn.neighbors.KNeighborsClassifier',\
+'classifier__n_neighbors':[5,7],\
+'classifier__p':[1,2]}\
 ]"
 
 
-python hypertune.py $TRAINING_DATASET $SEARCH_SPACE $SCORING_MEASURE $NUM_JOBS
+python hypertune.py $TRAINING_DATASET $SEARCH_SPACE $SCORING_MEASURE 
+
+#{'classifier':'sklearn.svm.SVC',\
+#'classifier__kernel':['linear'],\
+#'classifier__C':[0.025]}\
+
+#{'classifier':'sklearn.neural_network.MLPClassifier',\
+#'classifier__alpha':[0.0001,0.0004],\
+#'classifier__max_iter':[200]}\
+
+#{'classifier':'sklearn.neighbors.KNeighborsClassifier',\
+#'classifier__n_neighbors':[5],\
+#'classifier__p':[2]}\
+
+#{'classifier':'sklearn.linear_model.SGDClassifier',\
+#'classifier__alpha':[0.0002,0.0004,0.0008,0.001],\
+#'classifier__max_iter':[500,1000]},\
+
