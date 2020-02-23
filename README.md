@@ -92,5 +92,7 @@ cd joblib
 ```
 5. If you want you can monitor the resource usage by opening another JupyterLab terminal and starting the Linux `top` command
 
+## Running a parallel hypertuning job using Google Cloud AI Platfom Training
 
+You will run the hyperparameter tuning job using the [custom containers feature](https://cloud.google.com/ai-platform/training/docs/using-containers) of **AI Platform Training**.
 
