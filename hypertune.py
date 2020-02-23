@@ -92,8 +92,7 @@ def run_dask_job(training_dataset_path, search_space, scoring_measure, n_workers
   logging.info("Elapsed time: {}".format(t1-t0))
   logging.info("Best accuracy: {}".format(result.best_score_))
   logging.info("Best estimater: {}".format(result.best_estimator_))
-  logging.info("Best parameters: {}".format(result.best_params_))
-
+ 
   
 if __name__ == "__main__":
   logging.basicConfig(level=logging.INFO)

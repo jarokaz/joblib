@@ -23,9 +23,12 @@ SEARCH_SPACE="[\
 'classifier__n_neighbors':[3,5,7,10],\
 'classifier__p':[1,2]}\
 ]"
+N_WORKERS=4
+THREADS_PER_WORKER=2
 
+python hypertune.py $TRAINING_DATASET $SEARCH_SPACE $SCORING_MEASURE $N_WORKERS $THREADS_PER_WORKER
+echo "Done"
 
-python hypertune.py $TRAINING_DATASET $SEARCH_SPACE $SCORING_MEASURE 
 
 
 

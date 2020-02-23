@@ -28,9 +28,13 @@ SEARCH_SPACE="[\
 IMAGE_URI=gcr.io/mlops-workshop/dask_ml_trainer
 JOB_NAME=JOB_$(date +"%Y%m%d%s")
 JOB_DIR=gs://mlops-workshop-artifact-store/jobs/$JOB_NAME
-CPU_NUMBER=4
-MASTER_MACHINE_TYPE=n1-standard-${CPU_NUMBER}
 REGION=us-central1
+
+CPU_NUMBER=16
+MASTER_MACHINE_TYPE=n1-highmem-${CPU_NUMBER}
+THREADS_PER_WORKER=4
+N_WORKERS=4
+
 
 gcloud ai-platform jobs submit training $JOB_NAME \
 --region=$REGION \
@@ -41,7 +45,10 @@ gcloud ai-platform jobs submit training $JOB_NAME \
 -- \
 --training_dataset_path=$TRAINING_DATASET \
 --search_space=$SEARCH_SPACE \
---scoring_measure=$SCORING_MEASURE
+--scoring_measure=$SCORING_MEASURE \
+--n_workers=$N_WORKERS \
+--threads_per_worker=$THREADS_PER_WORKER
+
 
 
 
