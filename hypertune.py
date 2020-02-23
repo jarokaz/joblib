@@ -36,9 +36,10 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
  
 NUMERIC_FEATURE_INDEXES = slice(0, 10)
 CATEGORICAL_FEATURE_INDEXES = slice(10, 12)
+MODEL_FILE='model.joblib'
 
   
-def train_evaluate(training_dataset_path, search_space, scoring_measure):
+def train_evaluate(job_dir, training_dataset_path, search_space, scoring_measure):
   """Runs the training pipeline.""" 
 
   # Load and prepare training data  
@@ -71,7 +72,7 @@ def train_evaluate(training_dataset_path, search_space, scoring_measure):
     
   return grid
     
-def run_dask_job(training_dataset_path, search_space, scoring_measure, n_workers=None, threads_per_worker=None):
+def run_dask_job(job_dir, training_dataset_path, search_space, scoring_measure, n_workers=None, threads_per_worker=None):
   """Runs a parallel training job."""
   
   # Configure parameter grid
@@ -87,13 +88,24 @@ def run_dask_job(training_dataset_path, search_space, scoring_measure, n_workers
     
   logging.info("Starting training ...")
   t0= time.time()
-  result = train_evaluate(training_dataset_path, search_space, scoring_measure)
+  result = train_evaluate(job_dir, training_dataset_path, search_space, scoring_measure)
   t1 = time.time()
   logging.info("Elapsed time: {}".format(t1-t0))
   logging.info("Best accuracy: {}".format(result.best_score_))
   logging.info("Best estimater: {}".format(result.best_estimator_))
  
-  
+  # Persist the pipeline
+  if job_dir[0:2] == 'gs':
+    joblib.dump(result.best_estimator_, MODEL_FILE)
+    model_path = "{}/model/{}".format(job_dir, MODEL_FILE)
+    subprocess.check_call(['gsutil', 'cp', MODEL_FILE, model_path], stderr=sys.stdout)
+    
+  else:
+    model_path = os.path.join(job_dir, MODEL_FILE)
+    joblib.dump(result.best_estimator_, model_path)
+    
+  logging.info("Saved model in: {}".format(model_path))
+    
 if __name__ == "__main__":
   logging.basicConfig(level=logging.INFO)
   fire.Fire(run_dask_job)

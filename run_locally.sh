@@ -17,18 +17,23 @@ TRAINING_DATASET=gs://workshop-datasets/covertype/evaluation/dataset.csv
 SCORING_MEASURE=accuracy
 SEARCH_SPACE="[\
 {'classifier':'sklearn.linear_model.SGDClassifier',\
-'classifier__alpha':[0.0001,0.0002,0.0004,0.0008,0.001],\
-'classifier__max_iter':[250,500,1000]},\
-{'classifier':'sklearn.neighbors.KNeighborsClassifier',\
-'classifier__n_neighbors':[3,5,7,10],\
-'classifier__p':[1,2]}\
+'classifier__alpha':[0.0001,0.0002,0.0004,0.0008],\
+'classifier__max_iter':[250,500]}\
 ]"
 N_WORKERS=4
 THREADS_PER_WORKER=2
+JOB_DIR=/tmp
 
-python hypertune.py $TRAINING_DATASET $SEARCH_SPACE $SCORING_MEASURE $N_WORKERS $THREADS_PER_WORKER
+python hypertune.py $JOB_DIR $TRAINING_DATASET $SEARCH_SPACE $SCORING_MEASURE $N_WORKERS $THREADS_PER_WORKER
 echo "Done"
 
 
 
 
+#{'classifier':'sklearn.linear_model.SGDClassifier',\
+#'classifier__alpha':[0.0001,0.0002,0.0004,0.0008,0.001],\
+#'classifier__max_iter':[250,500,1000]},\
+#{'classifier':'sklearn.neighbors.KNeighborsClassifier',\
+#'classifier__n_neighbors':[3,5,7,10],\
+#'classifier__p':[1,2]}\
+#]"
