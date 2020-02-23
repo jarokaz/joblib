@@ -76,4 +76,21 @@ After the instance is created you can connect to [JupyterLab](https://jupyter.or
 https://console.cloud.google.com/ai-platform/notebooks/instances?_ga=2.54220904.1157225642.1581788166-681008261.1557843199&_gac=1.170534164.1582425753.EAIaIQobChMIt627m9Pm5wIVex-tBh3NFw-gEAAYASAAEgIXOvD_BwE
 2. Select **Open JupyterLab** for the instance you created
 
+### Running the hyperparameter job locally
+To run the distributed hyperparameter job locally:
+1. Open the **JupyterLab** terminal
+2. Clone this repo
+```
+cd /home
+git clone https://github.com/jarokaz/joblib.git
+cd joblib
+```
+3. Review the `run_locally.sh` script. Note how to configure the number of workers and threads. 
+4. Run the hyperparameter tuning script
+```
+./run_locally.sh
+```
+5. If you want you can monitor the resource usage by opening another JupyterLab terminal and starting the Linux `top` command
+
+
 
