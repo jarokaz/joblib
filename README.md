@@ -107,3 +107,12 @@ COPY hypertune.py .
 ENTRYPOINT ["python", "hypertune.py"]
 EOF
 ```
+2. Build the hyperparameter tuning container image using **Cloud Build**
+```
+PROJECT_ID=$(gcloud config get-value core/project)
+IMAGE_NAME=dask_ml_trainer
+IMAGE_TAG=latest
+IMAGE_URI=gcr.io/$PROJECT_ID/$IMAGE_NAME:$IMAGE_TAG
+
+gcloud builds submit --tag $IMAGE_URI .
+```
