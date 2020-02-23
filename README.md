@@ -10,7 +10,7 @@ The sample walks you through two scenarios:
 
 
 
-## Running a parallel hypertuning job locally on a multi-CPU AI Platform notebook
+## Running a parallel hypertuning job locally on a multi-CPU AI Platform Notebooks instance
 
 ### Creating an instance of AI Platform Notebooks 
 In this step you will create an instance of **AI Platform Notebooks** using a custom container image. The custom container image is a derivative of the standard Python CPU Deep Learning Container extended with [dask-ml](https://pypi.org/project/dask-ml/) and [fire](https://google.github.io/python-fire/guide/) Python packages.
