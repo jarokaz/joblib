@@ -5,7 +5,7 @@ This code sample demonstrates how to run a parallel hyperparameter tuning regime
 The sample uses very basic features of `dask-ml`, specifically the [local distributed scheduler](https://docs.dask.org/en/latest/setup/single-distributed.html) and the [dask_ml.model_selection.GridSearchCV](https://ml.dask.org/hyper-parameter-search.html) class. To further improve performance on large, multi-CPU and high memory machines, the reader can consider utilizing other features of `dask-ml` like [parallel preprocessing](https://ml.dask.org/preprocessing.html), and [parallel estimators](https://ml.dask.org/glm.html)
 
 The sample walks you through two scenarios:
-- Running a parallel hypertuning job locally on a multi-CPU AI Platform notebook
+- Running a parallel hypertuning job locally on a multi-CPU **AI Platform Notebooks** instance
 - Running a parallel hypertuning job using Cloud AI Platfom Training.
 
 
