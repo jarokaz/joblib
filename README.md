@@ -8,7 +8,7 @@ The sample walks you through two scenarios:
 - Running a parallel hypertuning job locally on a multi-CPU [Google Cloud Platform AI Platform Notebooks](https://cloud.google.com/ai-platform-notebooks) instance
 - Running a parallel hypertuning job using [Google Cloud AI Platfom Training](https://cloud.google.com/ai-platform/training/docs/overview).
 
-Before proceeding you need an access to a [GCP Project](https://cloud.google.com/docs/overview) with the following **Cloud Services** enabled:
+Before proceeding, you need a [Project Editor or Project Owner](https://cloud.google.com/iam/docs/understanding-roles) access to a [GCP Project](https://cloud.google.com/docs/overview) with the following **Cloud Services** enabled:
 - Compute Engine
 - Cloud Build
 - AI Platform Training and Prediction
