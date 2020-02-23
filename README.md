@@ -69,3 +69,11 @@ gcloud compute instances create $INSTANCE_NAME \
     --scopes=cloud-platform,userinfo-email \
     --metadata=$METADATA
 ```
+
+### Connecting to JupyterLab on the instance
+After the instance is created you can connect to [JupyterLab](https://jupyter.org/):
+1. Go to the **AI Platform Notebooks** page in the Google Cloud Console.
+https://console.cloud.google.com/ai-platform/notebooks/instances?_ga=2.54220904.1157225642.1581788166-681008261.1557843199&_gac=1.170534164.1582425753.EAIaIQobChMIt627m9Pm5wIVex-tBh3NFw-gEAAYASAAEgIXOvD_BwE
+2. Select **Open JupyterLab** for the instance you created
+
+
