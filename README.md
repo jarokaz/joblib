@@ -135,3 +135,4 @@ gsutil mb $JOB_BUCKET
 ```
 ./run_on_caip.sh
 ```
+7. You can monitor the job using [the `gcloud` command or GCP Console](https://cloud.google.com/ai-platform/training/docs/monitor-training)
