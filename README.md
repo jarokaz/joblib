@@ -124,3 +124,6 @@ IMAGE_URI=gcr.io/$PROJECT_ID/$IMAGE_NAME:$IMAGE_TAG
 
 gcloud builds submit --tag $IMAGE_URI .
 ```
+5. Review and update the `run_on_caip.sh` script. Make user that the `IMAGE_URI` variable points to the image you created in the previous step
+
+```
