@@ -31,6 +31,19 @@ cd temp-workspace
 ```
 3. Create the Dockerfile for the custom image
 ```
-
+cat > Dockerfile << EOF
+FROM gcr.io/deeplearning-platform-release/base-cpu
+RUN pip install -U fire dask-ml
+EOF
 ```
+4. Build the image using [Cloud Build](https://cloud.google.com/cloud-build). Make sure to use your project ID to set the `PROJECT_ID` environmental variable
+```
+PROJECT_ID=[YOUR_PROJECT_ID]
+gcloud config set project $PROJECT_ID
 
+IMAGE_NAME=dask-ml
+TAG=latest
+IMAGE_URI="gcr.io/${PROJECT_ID}/${IMAGE_NAME}:${TAG}"
+
+gcloud builds submit --timeout 15m --tag ${IMAGE_URI} .
+```
