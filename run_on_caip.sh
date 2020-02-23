@@ -25,9 +25,11 @@ SEARCH_SPACE="[\
 ]"
 
 
-IMAGE_URI=gcr.io/mlops-workshop/dask_ml_trainer
+IMAGE_URI=gcr.io/jk-dask-test1/dask_ml_trainer
+JOB_BUCKET=gs://jk-dask-test1-bucket
+
 JOB_NAME=JOB_$(date +"%Y%m%d%s")
-JOB_DIR=gs://mlops-workshop-artifact-store/jobs/$JOB_NAME
+JOB_DIR=${JOB_BUCKET}/jobs/${JOB_NAME}
 REGION=us-central1
 
 CPU_NUMBER=16
