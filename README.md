@@ -94,7 +94,9 @@ cd joblib
 
 ## Running a parallel hypertuning job using Google Cloud AI Platfom Training
 
-You can run the hyperparameter tuning job using the [custom containers feature](https://cloud.google.com/ai-platform/training/docs/using-containers) of **AI Platform Training**.
+There are many options for running the script similar to `hypertune.py` as a batch job on GCP. You can schedule it on a GCP VM, or package it as a container image and run it on Google Kubernetes Cluster (GKE). 
+
+In this example you will use the [custom containers feature](https://cloud.google.com/ai-platform/training/docs/using-containers) of **AI Platform Training**.
 
 
 1. Open the **JupyterLab** terminal
