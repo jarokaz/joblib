@@ -96,11 +96,13 @@ cd joblib
 
 You can run the hyperparameter tuning job using the [custom containers feature](https://cloud.google.com/ai-platform/training/docs/using-containers) of **AI Platform Training**.
 
-1. Make sure that you are in the root folder of the example
+
+1. Open the **JupyterLab** terminal
+2. Make sure that you are in the root folder of the example
 ```
 cd /home/joblib
 ```
-2. Package the training script as a docker container image
+3. Package the training script as a docker container image
 ```
 cat > Dockerfile << EOF
 FROM gcr.io/deeplearning-platform-release/base-cpu
@@ -111,7 +113,7 @@ COPY hypertune.py .
 ENTRYPOINT ["python", "hypertune.py"]
 EOF
 ```
-3. Build the hyperparameter tuning container image using **Cloud Build**
+4. Build the hyperparameter tuning container image using **Cloud Build**
 ```
 PROJECT_ID=$(gcloud config get-value core/project)
 IMAGE_NAME=dask_ml_trainer
