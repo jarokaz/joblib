@@ -47,3 +47,24 @@ IMAGE_URI="gcr.io/${PROJECT_ID}/${IMAGE_NAME}:${TAG}"
 
 gcloud builds submit --timeout 15m --tag ${IMAGE_URI} .
 ```
+5. Provision the notebook instance. Maker sure to use your name to set the `INSTANCE_NAME` environmental variable.
+```
+INSTANCE_NAME=[YOUR_INSTANCE_NAME]
+
+IMAGE_FAMILY="common-container"
+IMAGE_PROJECT="deeplearning-platform-release"
+INSTANCE_TYPE="n1-standard-16"
+METADATA="proxy-mode=service_account,container=$IMAGE_URI"
+
+gcloud compute instances create $INSTANCE_NAME \
+    --zone=$ZONE \
+    --image-family=$IMAGE_FAMILY \
+    --machine-type=$INSTANCE_TYPE \
+    --image-project=$IMAGE_PROJECT \
+    --maintenance-policy=TERMINATE \
+    --boot-disk-device-name=$INSTANCE_NAME-disk \
+    --boot-disk-size=100GB \
+    --boot-disk-type=pd-ssd \
+    --scopes=cloud-platform,userinfo-email \
+    --metadata=$METADATA
+```
