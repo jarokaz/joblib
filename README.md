@@ -94,5 +94,16 @@ cd joblib
 
 ## Running a parallel hypertuning job using Google Cloud AI Platfom Training
 
-You will run the hyperparameter tuning job using the [custom containers feature](https://cloud.google.com/ai-platform/training/docs/using-containers) of **AI Platform Training**.
+You can run the hyperparameter tuning job using the [custom containers feature](https://cloud.google.com/ai-platform/training/docs/using-containers) of **AI Platform Training**.
 
+1. Package the training script as a docker container image
+```
+cat > Dockerfile << EOF
+FROM gcr.io/deeplearning-platform-release/base-cpu
+RUN pip install -U fire dask-ml
+WORKDIR /app
+COPY hypertune.py .
+
+ENTRYPOINT ["python", "hypertune.py"]
+EOF
+```
